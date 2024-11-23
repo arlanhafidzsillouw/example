@@ -1,0 +1,145 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Data Diri Anda',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: InputDataScreen(),
+    );
+  }
+}
+
+class InputDataScreen extends StatefulWidget {
+  @override
+  _InputDataScreenState createState() => _InputDataScreenState();
+}
+
+class _InputDataScreenState extends State<InputDataScreen> {
+  final _formKey = GlobalKey<FormState>();
+  String _nama = '';
+  String _alamat = '';
+  String _nomorTelepon = '';
+
+  void _submitData() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DisplayDataScreen(
+            nama: _nama,
+            alamat: _alamat,
+            nomorTelepon: _nomorTelepon,
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Input Data Diri Anda'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Nama'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Nama tidak boleh kosong';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _nama = value!;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Alamat'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Alamat tidak boleh kosong';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _alamat = value!;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Nomor Telepon'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Nomor telepon tidak boleh kosong';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _nomorTelepon = value!;
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _submitData,
+                child: Text('Kirim'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DisplayDataScreen extends StatelessWidget {
+  final String nama;
+  final String alamat;
+  final String nomorTelepon;
+
+  DisplayDataScreen({
+    required this.nama,
+    required this.alamat,
+    required this.nomorTelepon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Data Diri Anda'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Nama: $nama', style: TextStyle(fontSize: 20)),
+            Text('Alamat: $alamat', style: TextStyle(fontSize: 20)),
+            Text('Nomor Telepon: $nomorTelepon', style: TextStyle(fontSize: 20)),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Kembali'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
